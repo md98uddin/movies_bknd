@@ -5,6 +5,7 @@ const Schema = Mongoose.Schema;
 const MovieSchema = new Schema(
   {
     title: { type: String, required: true, maxlength: 48 },
+    cover: { type: String, required: true },
     genre: {
       type: String,
       enum: ["All", "Horror", "Action", "Adventure", "Sci-Fi", "Mystery"],

@@ -5,6 +5,7 @@ validateMovie = movie => {
     title: Joi.string()
       .max(48)
       .required(),
+    cover: Joi.string().required(),
     genre: Joi.string()
       .valid("All", "Horror", "Action", "Adventure", "Sci-Fi", "Mystery")
       .required()

@@ -9,7 +9,7 @@ router.route("/").get((request, response) => {
       response.status(200).send(res);
     })
     .catch(error => {
-      console.log(error.message);
+      response.status(404).send(error.message);
     });
 });
 
@@ -24,29 +24,37 @@ router.route("/:id").get((request, response) => {
     });
 });
 
-router.route("/add").post((request, response) => {
-  const { title, genre, releaseYear, duration, rating } = request.body;
+router.route("/add").post(async (request, response) => {
+  const { title, cover, genre, releaseYear, duration, rating } = request.body;
 
-  const { error, value } = services.validateMovie({
-    title,
-    genre,
-    releaseYear,
-    duration,
-    rating
-  });
-
-  if (error) {
-    return response.status(400).send("error " + error.message);
+  const movieExists = await Movie.find({ title });
+  if (movieExists.length > 0) {
+    return response
+      .status(400)
+      .send(`movie with the title ${title} already exists`);
   } else {
-    var newMovie = new Movie(value);
-    newMovie
-      .save()
-      .then(() => {
-        response.status(200).send("movie " + newMovie);
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
+    const { error, value } = services.validateMovie({
+      title,
+      cover,
+      genre,
+      releaseYear,
+      duration,
+      rating
+    });
+
+    if (error) {
+      return response.status(400).send("error " + error.message);
+    } else {
+      var newMovie = new Movie(value);
+      newMovie
+        .save()
+        .then(() => {
+          response.status(200).send("movie " + newMovie);
+        })
+        .catch(error => {
+          response.status(404).send(error.message);
+        });
+    }
   }
 });
 
