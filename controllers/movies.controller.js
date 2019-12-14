@@ -24,6 +24,7 @@ router.route("/:id").get((request, response) => {
     });
 });
 
+//add a new movie to database
 router.route("/add").post(async (request, response) => {
   const { title, cover, genre, releaseYear, duration, rating } = request.body;
 
@@ -56,6 +57,27 @@ router.route("/add").post(async (request, response) => {
         });
     }
   }
+});
+
+//update a movie by id
+router.route("/:id").put(async (request, response) => {
+  const { title, cover, genre, releaseYear, duration, rating } = request.body;
+  Movie.findById(request.params.id)
+    .then(res => {
+      res.title = title;
+      res.cover = cover;
+      res.genre = genre;
+      (res.releaseYear = releaseYear),
+        (res.duration = duration),
+        (res.rating = rating);
+
+      res.save();
+    })
+    .catch(error => {
+      response
+        .status(404)
+        .send(error.message + " movie with this id not found.");
+    });
 });
 
 module.exports = router;
