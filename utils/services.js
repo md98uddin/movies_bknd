@@ -22,4 +22,42 @@ validateMovie = movie => {
   return Schema.validate(movie);
 };
 
+validateUser = user => {
+  const Schema = Joi.object().keys({
+    name: Joi.string()
+      .min(2)
+      .max(48)
+      .required(),
+    email: Joi.string()
+      .email()
+      .min(5)
+      .max(255)
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .max(255)
+      .required()
+  });
+
+  return Schema.validate(user);
+};
+
+validateLogin = user => {
+  const Schema = Joi.object().keys({
+    email: Joi.string()
+      .email()
+      .min(5)
+      .max(255)
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .max(255)
+      .required()
+  });
+
+  return Schema.validate(user);
+};
+
 exports.validateMovie = validateMovie;
+exports.validateUser = validateUser;
+exports.validateLogin = validateLogin;
